@@ -31,3 +31,9 @@ export type AgilityResponse = {
     level: "None" | "Beginner" | "Active";
     isEmpty: boolean;
 };
+
+export type PortfolioResponse = {
+    agility: AgilityResponse;
+    categoryAverages: CategoryScores;
+    totalLogs: number;
+};
