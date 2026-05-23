@@ -32,17 +32,20 @@ export default function AnalysisPage() {
     const [phaseLabel, setPhaseLabel] = useState('');
     const [exiting, setExiting] = useState(false);
 
+    // スキップボタン押下時：ログ記録を行わずに結果画面（/universe）へ遷移
     const handleSkip = () => {
         setExiting(true);
         setTimeout(() => router.push('/universe'), 400);
     };
 
+    // 戻るボタン押下時：フェードアウトして前のページへ遷移
     const handleBack = () => {
         setExiting(true);
         setTimeout(() => router.back(), 400);
     };
 
     const [swipeDx, setSwipeDx] = useState(0);
+    // 右スワイプで前の画面に戻るジェスチャー設定
     const swipeBind = useDrag(
         ({ movement: [mx, my], last, velocity: [vx] }) => {
             if (exiting) return;
@@ -68,7 +71,7 @@ export default function AnalysisPage() {
         const cx = canvas.width / 2;
         const cy = canvas.height / 2;
 
-        // キーワード取得
+        // sessionStorage から回答を取得し、キーワードとして分割
         let keywords = MOCK_KEYWORDS;
         try {
             const stored = sessionStorage.getItem('answers');
@@ -81,11 +84,12 @@ export default function AnalysisPage() {
             // モックを使用
         }
 
-        // フェーズ管理
-        const PHASE_DURATIONS = [1200, 1600, 1700]; // ms
+        // アニメーションを3フェーズに分割して管理（出現→収束→ジオメトリ形成）
+        // 各フェーズの継続時間（ms）: 出現 → 収束 → ジオメトリ形成 の3ステップ
+        const PHASE_DURATIONS = [1200, 1600, 1700];
         const TOTAL_DURATION = PHASE_DURATIONS.reduce((a, b) => a + b, 0);
 
-        // パーティクル生成
+        // キーワードごとに 12 個のパーティクルを生成し、各キーワード周辺にランダム配置
         const createParticles = () => {
             const pts: Particle[] = [];
             const perWord = 12;
@@ -119,7 +123,7 @@ export default function AnalysisPage() {
         let startTime: number | null = null;
         let lineProgress = 0;
 
-        // 六角形の頂点
+        // フェーズ3でパーティクルが収束する六角形の6頂点座標を計算
         const hexPoints = Array.from({ length: 6 }, (_, i) => {
             const a = (Math.PI / 3) * i - Math.PI / 2;
             return { x: cx + Math.cos(a) * 80, y: cy + Math.sin(a) * 80 };
@@ -240,7 +244,7 @@ export default function AnalysisPage() {
                 }
             }
 
-            // 終了後遷移
+            // アニメーション完了後にPOST /api/logs を呼び出し、完了後に結果画面へ遷移
             if (elapsed > TOTAL_DURATION + 200) {
                 cancelAnimationFrame(animRef.current);
                 const answers: string[] = JSON.parse(sessionStorage.getItem('answers') || '[]');

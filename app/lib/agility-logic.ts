@@ -66,6 +66,7 @@ const calculateRecentChange = (scores: ScoreSet[]): number => {
     const categories: (keyof ScoreSet)[] = [
         "analytical", "strategic", "exploratory", "reflective", "social"
     ];
+    // 配列の先頭が最新ログ（API では降順で渡される）
     const latest = scores[0];
     const past = scores.slice(1);
 

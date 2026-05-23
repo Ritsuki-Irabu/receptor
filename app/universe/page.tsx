@@ -14,6 +14,7 @@ interface Node {
     description: string;
 }
 
+// APIデータ取得前に表示するフォールバック用のデフォルト値
 const MOCK_RESULT = {
     agilityScore: 73,
     radarData: {
@@ -42,11 +43,13 @@ const CENTER_R = 44;
 const NODE_R_RIGID = 40;
 const NODE_R_FLEX = 36;
 
+// ノードを円周上に等間隔で配置するための座標を計算
 function getRadialPos(index: number, total: number) {
     const angle = (Math.PI * 2 * index) / total - Math.PI / 2;
     return { x: CX + Math.cos(angle) * ORBIT_R, y: CY + Math.sin(angle) * ORBIT_R, angle };
 }
 
+// 思考マップをSVGで描画するコンポーネント。スポーク・エッジ・ノード・ゴーストノードをアニメーション表示
 function MindMapSVG({
     nodes, relatedEdges, posMap, selectedNode, pulseOffset, total, onSelectNode, svgStyle,
 }: {
@@ -214,6 +217,7 @@ function MindMapSVG({
     );
 }
 
+// 5カテゴリスコアをレーダーチャートで表示するコンポーネント。1200ms かけて各軸の値まで伸びるアニメーション付き
 function RadarChart({ labels, values, size = 190 }: { labels: string[]; values: number[]; size?: number }) {
     const [progress, setProgress] = useState(0);
     const cx = size / 2;
@@ -273,6 +277,7 @@ const TABS: { id: Tab; label: string }[] = [
     { id: 'analysis', label: '思考分析' },
 ];
 
+// マップ/分析タブを切り替えるタブバー（モバイル専用）
 function TabBar({ active, onChange }: { active: Tab; onChange: (t: Tab) => void }) {
     return (
         <div style={{
@@ -324,6 +329,7 @@ function TabBar({ active, onChange }: { active: Tab; onChange: (t: Tab) => void 
     );
 }
 
+// レーダーチャートとカテゴリスコアバーを並べた思考分析ビュー
 function AnalysisView({ labels, values }: { labels: string[]; values: number[] }) {
     const scoreItems = labels.map((label, i) => ({ label, value: values[i] }))
         .sort((a, b) => b.value - a.value);
@@ -380,6 +386,7 @@ function AnalysisView({ labels, values }: { labels: string[]; values: number[] }
     );
 }
 
+// マインドマップと凡例を表示するビュー（モバイル用タブ切り替えで使用）
 function MapView({
     nodes, relatedEdges, posMap, selectedNode, pulseOffset, total, onSelectNode,
 }: {
@@ -434,12 +441,14 @@ export default function UniversePage() {
     const [pulseOffset, setPulseOffset] = useState<number[]>([]);
     const [exiting, setExiting] = useState(false);
 
+    // ホームへ遷移する（600ms フェードアウト後に / へ遷移）
     const handleNavigateHome = () => {
         if (exiting) return;
         setExiting(true);
         setTimeout(() => router.push('/'), 600);
     };
 
+    // セッション画面へ戻る（600ms フェードアウト後に /session へ遷移）
     const handleBack = () => {
         if (exiting) return;
         setExiting(true);
@@ -447,6 +456,7 @@ export default function UniversePage() {
     };
 
     const [swipeDx, setSwipeDx] = useState(0);
+    // 右スワイプで前の画面に戻るジェスチャー設定
     const swipeBind = useDrag(
         ({ movement: [mx, my], last, velocity: [vx] }) => {
             if (exiting) return;
@@ -463,6 +473,7 @@ export default function UniversePage() {
 
     const [result, setResult] = useState(MOCK_RESULT);
 
+    // マウント時にAPI取得・モバイル判定・パルスアニメーション初期化を実行
     useEffect(() => {
         setMounted(true);
         setPulseOffset(MOCK_RESULT.nodes.map(() => Math.random() * 2));
@@ -499,6 +510,7 @@ export default function UniversePage() {
     const { nodes, relatedEdges } = MOCK_RESULT;
     const total = nodes.length;
 
+    // 各ノードのSVG座標をIDをキーとしたマップに変換
     const posMap: Record<string, { x: number; y: number }> = {};
     nodes.forEach((node, i) => {
         const { x, y } = getRadialPos(i, total);

@@ -18,6 +18,7 @@ interface Particle {
   color: string;
 }
 
+// 背景に浮かぶパーティクルアニメーションを描画するキャンバスコンポーネント
 export default function ParticleCanvas({ opacity = 1.0 }: ParticleCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef<number>(0);
@@ -28,6 +29,7 @@ export default function ParticleCanvas({ opacity = 1.0 }: ParticleCanvasProps) {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    // ウィンドウサイズに合わせてキャンバスをリサイズ
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -43,6 +45,7 @@ export default function ParticleCanvas({ opacity = 1.0 }: ParticleCanvasProps) {
       `rgba(129, 140, 248, `,
     ];
 
+    // パーティクルを初期化（位置・速度・透明度をランダムに設定）
     for (let i = 0; i < particleCount; i++) {
       const baseOpacity = (0.2 + Math.random() * 0.6) * opacity;
       particles.push({
@@ -58,6 +61,7 @@ export default function ParticleCanvas({ opacity = 1.0 }: ParticleCanvasProps) {
       });
     }
 
+    // 毎フレームパーティクルを更新して描画するアニメーションループ
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -67,10 +71,12 @@ export default function ParticleCanvas({ opacity = 1.0 }: ParticleCanvasProps) {
 
         const maxOp = 0.8 * opacity;
         const minOp = 0.2 * opacity;
+        // 透明度を上下に往復させてフェード in/out を表現
         p.opacity += p.opacityDir * p.opacitySpeed;
         if (p.opacity > maxOp) { p.opacity = maxOp; p.opacityDir = -1; }
         if (p.opacity < minOp) { p.opacity = minOp; p.opacityDir = 1; }
 
+        // 画面端を超えたら反対側から再登場するラップアラウンド
         if (p.x < 0) p.x = canvas.width;
         if (p.x > canvas.width) p.x = 0;
         if (p.y < 0) p.y = canvas.height;

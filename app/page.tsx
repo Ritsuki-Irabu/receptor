@@ -6,17 +6,22 @@ import { motion, type Easing } from 'framer-motion';
 import ParticleCanvas from './components/ParticleCanvas';
 import type { LogItem } from './types/api';
 
+// ISO日付文字列を yyyy/MM/dd 形式に変換
 function formatSessionDate(iso: string): string {
+  // new Date() でパースし、月・日を2桁ゼロ埋めしてスラッシュ区切りで結合
   const d = new Date(iso);
   return `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}`;
 }
 
+// 5カテゴリスコアの平均値を 0〜100 のスコアに変換
 function computeScore(scores: { analytical: number; strategic: number; exploratory: number; reflective: number; social: number; } | null): number {
-  if (!scores) return 0;
+  if (!scores) return 0; // スコアが未取得（分析未実行）のときは 0 を返す
+  // DBでは 0〜1 スケールで保存されているため、5値の平均に ×100 して整数化
   const vals = [scores.analytical, scores.strategic, scores.exploratory, scores.reflective, scores.social];
   return Math.round((vals.reduce((a, b) => a + b, 0) / vals.length) * 100);
 }
 
+// スコアをアニメーションしながらカウントアップするカスタムフック
 function useCountUp(target: number, duration: number) {
   const [value, setValue] = useState(0);
   useEffect(() => {
@@ -24,6 +29,7 @@ function useCountUp(target: number, duration: number) {
     const step = (timestamp: number) => {
       if (!start) start = timestamp;
       const progress = Math.min((timestamp - start) / duration, 1);
+      // 3次イーズアウトで加速→減速するカウントアップ
       const eased = 1 - Math.pow(1 - progress, 3);
       setValue(Math.floor(eased * target));
       if (progress < 1) requestAnimationFrame(step);
@@ -60,20 +66,25 @@ export default function Home() {
   const sessionBtnRef = useRef<HTMLButtonElement>(null);
   const score = useCountUp(targetScore, 1500);
 
+  // 画面表示時にAgility Scoreと直近3件のログをAPIから取得
   useEffect(() => {
+    // portfolio から Agility Score を取得してカウントアップアニメーションを開始
     fetch('/api/portfolio')
       .then((res) => res.json())
       .then((data) => { if (!data.agility?.isEmpty) setTargetScore(data.agility.score); })
       .catch(() => { });
+    // 直近3件のセッションログを取得してホーム画面の履歴エリアに表示
     fetch('/api/logs')
       .then((res) => res.json())
       .then((data) => setRecentSessions((data.logs ?? []).slice(0, 3)))
       .catch(() => { });
   }, []);
 
+  // ページ遷移時にフェードアウトアニメーションと点火パーティクルを起動
   const handleNavigate = (path = '/session') => {
     if (exiting) return;
 
+    // /session への遷移時のみボタン中心から放射状にパーティクルを飛ばす
     if (path === '/session' && sessionBtnRef.current) {
       const rect = sessionBtnRef.current.getBoundingClientRect();
       const cx = rect.left + rect.width / 2;

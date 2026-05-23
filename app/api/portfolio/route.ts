@@ -4,6 +4,7 @@ import { prisma } from "@/app/lib/prisma";
 import { calculateAgilityScore } from "@/app/lib/agility-logic";
 import type { PortfolioResponse, CategoryScores } from "@/app/types/api";
 
+// ポートフォリオデータを返す（Agility Score・カテゴリ平均・総ログ数）
 export const GET = async () => {
     const session = await auth();
     if (!session?.user?.id) {
@@ -15,8 +16,10 @@ export const GET = async () => {
         include: { analysis: { include: { log: true } } },
     });
 
+    // ログIDを Set で重複排除してユニークなログ数をカウント
     const totalLogs = new Set(allScores.map((s) => s.analysis.log.id)).size;
 
+    // ログIDをキーに、カテゴリスコアをマップ化
     const scoresByLog = allScores.reduce((acc, s) => {
         const logId = s.analysis.log.id;
         if (!acc[logId]) acc[logId] = { analytical: 0, strategic: 0, exploratory: 0, reflective: 0, social: 0 };
@@ -30,6 +33,7 @@ export const GET = async () => {
         "analytical", "strategic", "exploratory", "reflective", "social"
     ];
 
+    // 各カテゴリの全ログ平均を計算（ログが0件のときは0でフォールバック）
     const categoryAverages = categories.reduce((acc, cat) => {
         acc[cat] = scoreSets.length > 0
             ? scoreSets.reduce((sum, s) => sum + s[cat], 0) / scoreSets.length
@@ -37,6 +41,7 @@ export const GET = async () => {
         return acc;
     }, {} as CategoryScores);
 
+    // ログ単位のスコアセットから Agility Score を算出
     const agility = calculateAgilityScore(scoreSets);
 
     return NextResponse.json<PortfolioResponse>({

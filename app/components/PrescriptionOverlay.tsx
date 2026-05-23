@@ -16,6 +16,7 @@ interface Props {
   onSaveReminder: (text: string) => void;
 }
 
+// マインドマップノードIDに対応するAIインサイト・処方箋・リマインドテキストの定義
 const PRESCRIPTIONS: Record<string, { insight: string; action: string; reminder: string }> = {
   n1: {
     insight: '完璧主義は、過去に「完璧でなければ価値がない」と学んだ体験から来ていることが多いです。',
@@ -39,9 +40,11 @@ const PRESCRIPTIONS: Record<string, { insight: string; action: string; reminder:
   },
 };
 
+// マインドマップノードをタップしたときに表示されるハーフモーダルオーバーレイ
 export default function PrescriptionOverlay({ node, onClose, onSaveReminder }: Props) {
   const [saved, setSaved] = useState(false);
 
+  // オーバーレイ表示中は背景スクロールを無効化
   useEffect(() => {
     if (!node) return;
     document.body.style.overflow = 'hidden';
@@ -52,10 +55,13 @@ export default function PrescriptionOverlay({ node, onClose, onSaveReminder }: P
 
   if (!node) return null;
 
+  // ノードIDに対応する処方箋を取得（未定義の場合はデフォルト）
   const prescription = PRESCRIPTIONS[node.id] ?? PRESCRIPTIONS.default;
   const isRigid = node.type === 'rigid';
 
+  // リマインド保存ボタン押下時の処理
   const handleSave = () => {
+    // リマインドテキストを親コンポーネントへ渡し、2秒後に保存済み表示をリセット
     onSaveReminder(prescription.reminder);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
