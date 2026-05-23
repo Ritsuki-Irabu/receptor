@@ -69,5 +69,5 @@
 
 ### Sprint 4: フロントエンド統合
 
-- [ ] [4.1] reframing-journeyプロトタイプ移植
+- [x] [4.1] reframing-journeyプロトタイプ移植
 - [ ] [4.2] APIとの結合・動作確認（E2E疎通確認）
