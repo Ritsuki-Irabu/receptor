@@ -23,7 +23,7 @@
 | 認証           | Auth.js (NextAuth v5)                                                  |
 | DB / ORM       | PostgreSQL / Prisma                                                    |
 | AI連携         | Google AI SDK / Gemini 1.5 Flash                                       |
-| 開発支援       | Claude Code / CLAUDE.md運用                                            |
+| 開発支援       | ChatGPT / Claude Code / CLAUDE.md運用                                            |
 | デプロイ       | Vercel + Neon（Vercel公式連携）                                        |
 
 -----
