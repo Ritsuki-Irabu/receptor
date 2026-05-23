@@ -16,6 +16,7 @@ interface Step {
     placeholder?: string;
 }
 
+// セッションで表示する質問ステップの定義（タグ選択2問 + テキスト入力3問）
 const MOCK_STEPS: Step[] = [
     {
         id: 1,
@@ -69,6 +70,7 @@ export default function SessionPage() {
     const [swipeDx, setSwipeDx] = useState(0);
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
+    // 前のステップへ戻る。最初のステップの場合はホームへ遷移
     const handleBack = () => {
         if (isAnimating) return;
         if (currentStep > 0) {
@@ -86,6 +88,7 @@ export default function SessionPage() {
     const step = MOCK_STEPS[currentStep];
     const totalSteps = MOCK_STEPS.length;
 
+    // 回答を記録し、全問完了したら sessionStorage に保存して分析画面へ遷移
     const goNext = (answer: string) => {
         setDirection(1);
         const newAnswers = [...answers, answer];
@@ -102,6 +105,7 @@ export default function SessionPage() {
         }
     };
 
+    // タグ選択時に 600ms のフラッシュアニメーション後に次ステップへ進む
     const handleTagSelect = (tag: string) => {
         if (isAnimating) return;
         setIsAnimating(true);
@@ -111,6 +115,7 @@ export default function SessionPage() {
         }, 600);
     };
 
+    // テキスト送信時にドット霧散アニメーションを起動し、完了後に次ステップへ進む
     const handleTextSubmit = () => {
         if (!textValue.trim() || isAnimating) return;
         setIsAnimating(true);
@@ -135,6 +140,7 @@ export default function SessionPage() {
         }, 1000);
     };
 
+    // 右スワイプで前の画面に戻るジェスチャー設定
     const swipeBind = useDrag(
         ({ movement: [mx, my], last, velocity: [vx] }) => {
             if (exiting || isAnimating) return;
@@ -431,6 +437,7 @@ export default function SessionPage() {
     );
 }
 
+// 選択・ホバー・クリックの3段階でビジュアルフィードバックを提供するタグボタン
 function TagButton({
     label,
     onClick,
@@ -448,6 +455,7 @@ function TagButton({
         if (disabled) return;
         setSelected(true);
         setClicked(true);
+        // 350ms でクリック発光を消去し、600ms 後に親の次ステップ処理を呼ぶ
         setTimeout(() => setClicked(false), 350);
         setTimeout(onClick, 600);
     };

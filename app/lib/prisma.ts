@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
+// Hot Reload 時に PrismaClient が重複生成されないようグローバルにシングルトン管理
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 
 export const prisma =

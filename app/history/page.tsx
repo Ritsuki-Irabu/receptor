@@ -7,18 +7,23 @@ import { useDrag } from '@use-gesture/react';
 import ParticleCanvas from '../components/ParticleCanvas';
 import type { LogItem, CategoryScores } from '../types/api';
 
+// ISO日付文字列を yyyy/MM/dd 形式に変換
 function formatSessionDate(iso: string): string {
+    // new Date() でパースし、月・日を2桁ゼロ埋めしてスラッシュ区切りで結合
     const d = new Date(iso);
     return `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}`;
 }
 
+// 5カテゴリスコアの平均値を 0〜100 のスコアに変換
 function computeScore(scores: CategoryScores | null): number {
-    if (!scores) return 0;
+    if (!scores) return 0; // スコアが未取得（分析未実行）のときは 0 を返す
+    // DBでは 0〜1 スケールで保存されているため、5値の平均に ×100 して整数化
     const vals = [scores.analytical, scores.strategic, scores.exploratory, scores.reflective, scores.social];
     return Math.round((vals.reduce((a, b) => a + b, 0) / vals.length) * 100);
 }
 
 
+// スコア推移を折れ線グラフで表示するSVGコンポーネント
 function ScoreTrendChart({ sessions }: { sessions: LogItem[] }) {
     const w = 320;
     const h = 80;
@@ -26,19 +31,23 @@ function ScoreTrendChart({ sessions }: { sessions: LogItem[] }) {
     const plotW = w - pad.l - pad.r;
     const plotH = h - pad.t - pad.b;
 
+    // セッションを古い順（昇順）に並べ直し、各スコアを算出
     const scores = [...sessions].reverse().map((s) => computeScore(s.scores));
     if (scores.length < 2) return null;
 
+    // スコアの最小・最大から上下に10点のマージンを取り、Y軸の表示範囲を決定
     const minS = Math.max(0, Math.min(...scores) - 10);
     const maxS = Math.min(100, Math.max(...scores) + 10);
     const range = maxS - minS || 1;
 
+    // 各スコアを SVG 座標に変換（X: 時系列、Y: スコア値を正規化して上下反転）
     const pts = scores.map((s, i) => ({
         x: pad.l + (i / (scores.length - 1)) * plotW,
         y: pad.t + (1 - (s - minS) / range) * plotH,
         score: s,
     }));
 
+    // 折れ線パス（M/L コマンド）と塗りつぶしエリアパス（底辺まで閉じる）を生成
     const linePath = pts.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
     const areaPath = linePath + ` L ${pts[pts.length - 1].x} ${h - pad.b} L ${pts[0].x} ${h - pad.b} Z`;
 
@@ -61,12 +70,14 @@ function ScoreTrendChart({ sessions }: { sessions: LogItem[] }) {
     );
 }
 
+// ログ1件の日付・スコア・カテゴリ詳細を表示するアコーディオンカード
 function SessionCard({ session, index }: { session: LogItem; index: number }) {
     const [open, setOpen] = useState(false);
     const cats: (keyof CategoryScores)[] = ['analytical', 'strategic', 'exploratory', 'reflective', 'social'];
     const labels: Record<keyof CategoryScores, string> = {
         analytical: '論理性', strategic: '戦略性', exploratory: '探究心', reflective: '振り返り', social: '社会性',
     };
+    // カテゴリをスコア降順に並べて、最も高い項目が先頭に来るようにする
     const sorted = cats
         .map((cat) => ({ label: labels[cat], value: Math.round((session.scores?.[cat] ?? 0) * 100) }))
         .sort((a, b) => b.value - a.value);
@@ -153,9 +164,11 @@ export default function HistoryPage() {
     const [exiting, setExiting] = useState(false);
     const [swipeDx, setSwipeDx] = useState(0);
 
+    // 画面表示時に GET /api/logs でログ一覧を取得
     useEffect(() => {
         fetch('/api/logs')
             .then((res) => res.json())
+            // レスポンスの logs 配列をセット（未取得時は空配列でフォールバック）
             .then((data) => setSessions(data.logs ?? []))
             .catch(() => { });
     }, []);
