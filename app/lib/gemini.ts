@@ -8,9 +8,8 @@ export type CategoryScores = {
     social: number;
 };
 
-// Gemini 1.5 Flash モデルを初期化（低レイテンシ・低コストで分析に適したモデル）
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
 // 思考ログを Gemini API に送り、5カテゴリのスコア（0.0〜1.0）を JSON で受け取る
 export const analyzeThoughtLog = async (content: string): Promise<CategoryScores> => {
