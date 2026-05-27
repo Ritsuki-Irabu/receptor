@@ -480,7 +480,7 @@ export default function UniversePage() {
         fetch('/api/portfolio')
             .then((res) => res.json())
             .then((data) => {
-                if (!data.agility?.isEmpty) {
+                if (data.agility && !data.agility.isEmpty) {
                     const cats = data.categoryAverages;
                     setResult((r) => ({
                         ...r,
