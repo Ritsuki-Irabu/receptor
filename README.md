@@ -194,8 +194,8 @@ erDiagram
 
 ### Sprint 4：フロントエンド統合
 
-- [ ] reframing-journeyプロトタイプ移植
-- [ ] APIとの結合・動作確認（E2E疎通確認）
+- [x] reframing-journeyプロトタイプ移植
+- [x] APIとの結合・動作確認（E2E疎通確認）
 
 -----
 
