@@ -184,12 +184,12 @@ erDiagram
 
 ### Sprint 3：スコア計算・可視化
 
-- [ ] Agility Score算出アルゴリズム実装（`lib/agility-logic.ts`）※完全手動
-- [ ] 算出ロジックの単体テスト（境界値対応）
+- [x] Agility Score算出アルゴリズム実装（`lib/agility-logic.ts`）※完全手動
+- [x] 算出ロジックの単体テスト（境界値対応）
 - [x] カスタムSVGレーダーチャート実装（別PJ完了）
 - [x] ポートフォリオ・ダッシュボード統合（別PJ完了）
-- [ ] `PATCH/DELETE /api/logs/[id]` エンドポイント実装
-- [ ] `GET /api/portfolio` エンドポイント実装
+- [x] `PATCH/DELETE /api/logs/[id]` エンドポイント実装
+- [x] `GET /api/portfolio` エンドポイント実装
 - [ ] パフォーマンス最適化
 
 ### Sprint 4：フロントエンド統合
