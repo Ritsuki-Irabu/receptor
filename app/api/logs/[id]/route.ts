@@ -12,7 +12,8 @@ const getAgilityScore = async (userId: string): Promise<AgilityResponse> => {
     });
 
     // ログIDをキーに、各カテゴリのスコアをマップ化
-    const scoresByLog = allResults.reduce((acc, s) => {
+    type ScoreMap = Record<string, { analytical: number; strategic: number; exploratory: number; reflective: number; social: number }>;
+    const scoresByLog = allResults.reduce((acc: ScoreMap, s) => {
         const logId = s.analysis.log.id;
         if (!acc[logId]) acc[logId] = { analytical: 0, strategic: 0, exploratory: 0, reflective: 0, social: 0 };
         acc[logId][s.category as keyof typeof acc[typeof logId]] = s.score;
