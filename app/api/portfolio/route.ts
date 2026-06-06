@@ -28,7 +28,7 @@ export const GET = async () => {
         return acc;
     }, {} as Record<string, CategoryScores>);
 
-    const scoreSets = Object.values(scoresByLog);
+    const scoreSets: CategoryScores[] = Object.values(scoresByLog);
 
     const categories: (keyof CategoryScores)[] = [
         "analytical", "strategic", "exploratory", "reflective", "social"
