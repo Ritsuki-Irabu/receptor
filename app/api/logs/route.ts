@@ -69,11 +69,11 @@ export const GET = async () => {
             createdAt: log.createdAt.toISOString(),
             scores: log.analysisResult
                 ? {
-                    analytical: log.analysisResult.scores.find((s) => s.category === "analytical")?.score ?? 0,
-                    strategic: log.analysisResult.scores.find((s) => s.category === "strategic")?.score ?? 0,
-                    exploratory: log.analysisResult.scores.find((s) => s.category === "exploratory")?.score ?? 0,
-                    reflective: log.analysisResult.scores.find((s) => s.category === "reflective")?.score ?? 0,
-                    social: log.analysisResult.scores.find((s) => s.category === "social")?.score ?? 0,
+                    analytical: log.analysisResult.scores.find((s: { category: string; score: number }) => s.category === "analytical")?.score ?? 0,
+                    strategic: log.analysisResult.scores.find((s: { category: string; score: number }) => s.category === "strategic")?.score ?? 0,
+                    exploratory: log.analysisResult.scores.find((s: { category: string; score: number }) => s.category === "exploratory")?.score ?? 0,
+                    reflective: log.analysisResult.scores.find((s: { category: string; score: number }) => s.category === "reflective")?.score ?? 0,
+                    social: log.analysisResult.scores.find((s: { category: string; score: number }) => s.category === "social")?.score ?? 0,
                 }
                 : null,
         })),
