@@ -17,10 +17,11 @@ export const GET = async () => {
     });
 
     // ログIDを Set で重複排除してユニークなログ数をカウント
-    const totalLogs = new Set(allScores.map((s) => s.analysis.log.id)).size;
+    type ScoreItem = typeof allScores[number];
+    const totalLogs = new Set(allScores.map((s: ScoreItem) => s.analysis.log.id)).size;
 
     // ログIDをキーに、カテゴリスコアをマップ化
-    const scoresByLog = allScores.reduce((acc, s) => {
+    const scoresByLog = allScores.reduce((acc: Record<string, CategoryScores>, s: ScoreItem) => {
         const logId = s.analysis.log.id;
         if (!acc[logId]) acc[logId] = { analytical: 0, strategic: 0, exploratory: 0, reflective: 0, social: 0 };
         acc[logId][s.category as keyof CategoryScores] = s.score;
@@ -34,9 +35,9 @@ export const GET = async () => {
     ];
 
     // 各カテゴリの全ログ平均を計算（ログが0件のときは0でフォールバック）
-    const categoryAverages = categories.reduce((acc, cat) => {
+    const categoryAverages = categories.reduce((acc: CategoryScores, cat: keyof CategoryScores) => {
         acc[cat] = scoreSets.length > 0
-            ? scoreSets.reduce((sum, s) => sum + s[cat], 0) / scoreSets.length
+            ? scoreSets.reduce((sum: number, s: CategoryScores) => sum + s[cat], 0) / scoreSets.length
             : 0;
         return acc;
     }, {} as CategoryScores);
