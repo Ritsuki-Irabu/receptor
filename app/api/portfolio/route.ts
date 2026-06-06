@@ -35,12 +35,16 @@ export const GET = async () => {
     ];
 
     // 各カテゴリの全ログ平均を計算（ログが0件のときは0でフォールバック）
-    const categoryAverages = categories.reduce((acc: CategoryScores, cat: keyof CategoryScores) => {
-        acc[cat] = scoreSets.length > 0
-            ? scoreSets.reduce((sum: number, s: CategoryScores) => sum + s[cat], 0) / scoreSets.length
-            : 0;
-        return acc;
-    }, {} as CategoryScores);
+    const n = scoreSets.length;
+    const avg = (cat: keyof CategoryScores) =>
+        n > 0 ? scoreSets.reduce((sum, s) => sum + s[cat], 0) / n : 0;
+    const categoryAverages: CategoryScores = {
+        analytical: avg("analytical"),
+        strategic: avg("strategic"),
+        exploratory: avg("exploratory"),
+        reflective: avg("reflective"),
+        social: avg("social"),
+    };
 
     // ログ単位のスコアセットから Agility Score を算出
     const agility = calculateAgilityScore(scoreSets);
