@@ -63,7 +63,7 @@ export const GET = async () => {
 
     // analysisResult が null（未分析）の場合は scores を null のまま返す
     const response: GetLogsResponse = {
-        logs: logs.map((log) => ({
+        logs: logs.map((log: typeof logs[number]) => ({
             id: log.id,
             content: log.content,
             createdAt: log.createdAt.toISOString(),
