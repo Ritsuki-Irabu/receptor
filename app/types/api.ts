@@ -30,6 +30,7 @@ export type AgilityResponse = {
     score: number;
     level: "None" | "Beginner" | "Active";
     isEmpty: boolean;
+    message?: string;
 };
 
 export type PortfolioResponse = {

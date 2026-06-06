@@ -94,7 +94,9 @@ const calculateCategoryCoverage = (scores: ScoreSet[]): number => {
     return active.length / categories.length;
 };
 
-export function calculateAgilityScore(allRecentScores: ScoreSet[]) {
+import type { AgilityResponse } from "@/app/types/api";
+
+export function calculateAgilityScore(allRecentScores: ScoreSet[]): AgilityResponse {
     // --- 1. 0件（データなし）のハンドリング ---
     if (!allRecentScores || allRecentScores.length === 0) {
         return {
