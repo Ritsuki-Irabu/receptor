@@ -23,7 +23,7 @@
 | 認証           | Auth.js (NextAuth v5)                                                  |
 | DB / ORM       | PostgreSQL / Prisma                                                    |
 | AI連携         | Google AI SDK / Gemini 1.5 Flash                                       |
-| 開発支援       | Claude Code / CLAUDE.md運用                                            |
+| 開発支援       | ChatGPT / Claude Code / CLAUDE.md運用                                            |
 | デプロイ       | Vercel + Neon（Vercel公式連携）                                        |
 
 -----
@@ -165,26 +165,37 @@ erDiagram
 
 ## 🗺 開発ロードマップ
 
-### Sprint 1：基盤構築
+> UIタスクはreframing-journeyプロトタイプ（別プロジェクト）で実装済み。Sprint 4にて本リポジトリへ統合予定。
 
-- [ ] Next.jsプロジェクト初期化
-- [ ] Prisma Schema定義・DBマイグレーション
-- [ ] Auth.js (v5) セットアップ・認証ガード実装
-- [ ] 共有レイアウト（Nav/Sidebar）作成
+### Sprint 1：基盤構築 ✅
 
-### Sprint 2：AI分析エンジン
+- [x] Next.jsプロジェクト初期化
+- [x] Prisma Schema定義・DBマイグレーション
+- [x] Auth.js (v5) セットアップ・認証ガード実装
+- [x] 共有レイアウト（Nav/Sidebar）作成
 
-- [ ] Gemini API連携クラス実装（`lib/gemini.ts`）※完全手動
-- [ ] `POST /api/logs` エンドポイント実装
-- [ ] 思考ログ入力フォームUI
-- [ ] Loading状態管理・ログ履歴一覧
+### Sprint 2：AI分析エンジン & 入力フロー
+
+- [x] Gemini API連携 Service実装（`lib/gemini.ts`）※完全手動
+- [x] `POST /api/logs` エンドポイント実装
+- [x] 思考ログ入力フォームUI（別PJ完了）
+- [x] Loading状態管理・ログ履歴一覧（別PJ完了）
+- [x] `GET /api/logs` エンドポイント実装
 
 ### Sprint 3：スコア計算・可視化
 
-- [ ] Agility Score算出アルゴリズム実装（`lib/agility-logic.ts`）※完全手動
-- [ ] 算出ロジックの単体テスト（境界値対応）
-- [ ] カスタムSVGレーダーチャート実装
-- [ ] ポートフォリオ・ダッシュボード統合
+- [x] Agility Score算出アルゴリズム実装（`lib/agility-logic.ts`）※完全手動
+- [x] 算出ロジックの単体テスト（境界値対応）
+- [x] カスタムSVGレーダーチャート実装（別PJ完了）
+- [x] ポートフォリオ・ダッシュボード統合（別PJ完了）
+- [x] `PATCH/DELETE /api/logs/[id]` エンドポイント実装
+- [x] `GET /api/portfolio` エンドポイント実装
+- [ ] パフォーマンス最適化
+
+### Sprint 4：フロントエンド統合
+
+- [x] reframing-journeyプロトタイプ移植
+- [x] APIとの結合・動作確認（E2E疎通確認）
 
 -----
 

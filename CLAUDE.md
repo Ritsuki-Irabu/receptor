@@ -38,12 +38,36 @@
 
 # 現在のスプリント・TODO（随時更新）
 
-- [x] フロントエンド全画面実装（5画面完了 — reframing-journeyプロトタイプ）
-- [ ] [Sprint 1.2] Prisma Schemaの完全定義（User, ThoughtLog, AnalysisResult, AnalysisScore）
-- [ ] [Sprint 1.3] DBマイグレーション & Seed作成
-- [ ] [Sprint 1.4] Auth.js (v5) による認証基盤の構築
-- [ ] [Sprint 2.1] Google AI SDK (Gemini) 連携ロジックの構築（完全手動）
-- [ ] [Sprint 2.2] API Routes (POST /api/logs) とPrismaの結合
-- [ ] [Sprint 3.1] Agility Score算出ロジックの実装（完全手動）
-- [ ] [Sprint 3.2] 算出ロジックの単体テスト（境界値対応）
-- [ ] フロントエンドプロトタイプ（reframing-journey）との統合
+※ UIタスクはreframing-journeyプロトタイプ（別プロジェクト）で実装済み。Sprint 4にて本リポジトリへ統合予定。
+
+### Sprint 1: 基盤構築
+
+- [x] [1.1] Next.js プロジェクト初期化
+- [x] [1.2] Prisma Schema定義（User, ThoughtLog, AnalysisResult, AnalysisScore）
+- [x] [1.3] DBマイグレーション & Seed作成
+- [x] [1.4] Auth.js (v5) セットアップ
+- [x] [1.5] 共有レイアウト（Nav/Sidebar）実装
+
+### Sprint 2: AI分析エンジン & 入力フロー
+
+- [x] [2.1] Gemini API 連携 Service実装（完全手動）
+- [x] [2.2] POST /api/logs エンドポイント実装
+- [x] [2.3] 思考ログ入力フォーム UI（別PJ完了 → 統合時に移植）
+- [x] [2.4] 分析中のLoading状態管理（別PJ完了 → 統合時に移植）
+- [x] [2.5] ログ履歴一覧コンポーネント（別PJ完了 → 統合時に移植）
+- [x] [2.6] GET /api/logs エンドポイント実装
+
+### Sprint 3: スコア計算 & データ可視化
+
+- [x] [3.1] Agility Score算出アルゴリズム実装（完全手動）
+- [x] [3.2] 算出ロジックの単体テスト（境界値対応）
+- [x] [3.3] カスタムSVG レーダーチャート実装（別PJ完了 → 統合時に移植）
+- [x] [3.4] ポートフォリオ・ダッシュボード（別PJ完了 → 統合時に移植）
+- [ ] [3.5] パフォーマンス最適化
+- [x] [3.6] PATCH/DELETE /api/logs/[id] エンドポイント実装（3.1と同タイミング）
+- [x] [3.7] GET /api/portfolio エンドポイント実装
+
+### Sprint 4: フロントエンド統合
+
+- [x] [4.1] reframing-journeyプロトタイプ移植
+- [x] [4.2] APIとの結合・動作確認（E2E疎通確認）
